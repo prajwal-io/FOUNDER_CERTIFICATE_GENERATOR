@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 
 const siteRoot = resolve(fileURLToPath(new URL('.', import.meta.url)));
 const port = Number(process.env.PORT || 8765);
+const host = process.env.HOST || (process.env.PORT ? '0.0.0.0' : '127.0.0.1');
 
 // Temporary authoritative allowlist: this project has no connected database.
 // Replace loadAttendeeNames() with the existing database query when one is configured.
@@ -161,6 +162,6 @@ const server = createServer(async (request, response) => {
   }
 });
 
-server.listen(port, '127.0.0.1', () => {
-  console.log(`Back to Base certificate site listening at http://127.0.0.1:${port}`);
+server.listen(port, host, () => {
+  console.log(`Back to Base certificate site listening on ${host}:${port}`);
 });
