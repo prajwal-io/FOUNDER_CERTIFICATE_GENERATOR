@@ -2,6 +2,7 @@ import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { extname, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { attendeeAllowlist, normalizeName } from './attendee-data.mjs';
 
 const siteRoot = resolve(fileURLToPath(new URL('.', import.meta.url)));
 const port = Number(process.env.PORT || 8765);
@@ -9,66 +10,14 @@ const host = process.env.HOST || (process.env.PORT ? '0.0.0.0' : '127.0.0.1');
 
 // Temporary authoritative allowlist: this project has no connected database.
 // Replace loadAttendeeNames() with the existing database query when one is configured.
-const attendeeAllowlist = [
-  'A Sai Krishna',
-  'Aditya Joshi',
-  'aditya kumar padhiary',
-  'Ala.Sudeeksha',
-  'Allam Abhinay',
-  'Alle Abhinay',
-  'Angerga SriChandana',
-  'Ankam Vennela',
-  'B.Harsha Vardhan',
-  'bareddy yashaswini',
-  'Byrumalla sahithi',
-  'Ch. Abhinaya Sri',
-  'Chandana.sahithi',
-  'CHANDIREDDY LEENAVARSHA',
-  'Damireddy Poorna Chand Reddy',
-  'Dhruv Y Thacker',
-  'Donakanti Aishwarya',
-  'GOWRISHETTY SITANSHU',
-  'Kandakurthi Sai Sharanya',
-  'Kasani Rajeswari',
-  'Kethavath Naveen',
-  'Khande Bhargavi',
-  'Kolipaka Abhichandra',
-  'Kona Mani Shankar',
-  'Kosuru Gouthami Priya',
-  'Mohammed Zakeer',
-  'Mohd Suhel',
-  'Mutakoduru Charan Chandra',
-  'Naipunya Addula',
-  'ROKKAM DILLESHWAR RAO',
-  'Seelam sowmya reddy',
-  'Srija Tula',
-  'Sriya Gopari',
-  'Sufi Mohammed Makhtoom Afnaan',
-  'Supriya chakri',
-  'Syed Muqeet',
-  'VADTHYA SHIVA PRASAD NAIK',
-  'Vijayganesh Bonthala',
-  'Vudumula Rishika Reddy',
-  'k Praneel',
-  'Talari Haricharan',
-  'Prem Varshith',
-  'T.Vijay Charan',
-  'THATIKANTI SRAVANKUMAR',
-  'Boddu Vasavi',
-  'Hari haran',
-  'Shashank',
-];
+
 
 async function loadAttendeeNames() {
   // Database integration point: return canonical attendee names from the connected DB here.
   return attendeeAllowlist;
 }
 
-function normalizeName(value) {
-  return typeof value === 'string'
-    ? value.trim().replace(/\s+/g, ' ').toLocaleLowerCase('en-US')
-    : '';
-}
+
 
 function sendJson(response, statusCode, data) {
   response.writeHead(statusCode, {

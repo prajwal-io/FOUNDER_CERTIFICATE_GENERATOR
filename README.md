@@ -14,14 +14,16 @@ Then open <http://127.0.0.1:8765>.
 
 ## Hosting
 
-Run this as a Node web service, not as static-only GitHub Pages: the name autocomplete and certificate verification call the same-origin `/api/attendees` endpoints. The server reads the host-provided `PORT` and binds to `0.0.0.0` when `PORT` is set. You can override this with `HOST` if needed.
+The repository supports both a Node web service and Vercel. Vercel automatically builds the functions in `api/` as same-origin endpoints, so attendee autocomplete and verification work in the deployed website. The Node server provides the same API when running locally or on a Node host.
 
 ## Attendee verification
 
-The verification API runs in `server.mjs`. This project currently uses the supplied attendee allowlist; it is not connected to a database. The `loadAttendeeNames()` function is the integration point for a future authoritative database query.
+The API uses the supplied 47-name attendee allowlist in `attendee-data.mjs`; it is not connected to a database. Both deployment paths validate against this allowlist before returning suggestions or authorizing certificate generation and export. A future authoritative database can replace the data source in that module and the shared Node server integration.
 
 ## Files
 
 - `index.html` — website UI, certificate renderer, and export actions
-- `server.mjs` — HTTP server and server-side attendee verification API
+- `server.mjs` — Node HTTP server and attendee verification API
+- `attendee-data.mjs` — canonical attendee allowlist and name normalization
+- `api/` — Vercel serverless endpoints for autocomplete, verification, and health checks
 - `assets/` — certificate artwork, background artwork, intro image, and supplied reference image
